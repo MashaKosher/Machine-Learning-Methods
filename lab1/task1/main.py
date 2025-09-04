@@ -1,6 +1,5 @@
 from utils import *
 
-
 if __name__ == "__main__":
     while True:
         print("\n" + "="*50)
@@ -10,6 +9,7 @@ if __name__ == "__main__":
         print("2. Анализ строки (подсчет слов с четной длиной и самое длинное слово)")
         print("3. Обработка списка (наибольший четный элемент и преобразование)")
         print("4. Поиск ключей с наименьшими значениями в словаре")
+        print("5. Ювелирный магазин")
         print("6. Создание списка и кортежа из последовательности")
         print("7. Выход")
         print("="*50)
@@ -24,6 +24,8 @@ if __name__ == "__main__":
             process_list()
         elif choice == "4":
             find_n_smallest()
+        elif choice == "5":
+            jewelry_shop()
         elif choice == "6":
             process_sequence()  # 1, 2, 3, 4, 5
         elif choice == "7":
