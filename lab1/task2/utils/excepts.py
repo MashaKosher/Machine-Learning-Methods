@@ -1,7 +1,4 @@
 def demonstrate_try_except_finally():
-    """
-    Демонстрация работы try/except/finally с различными сценариями.
-    """
     print("=" * 60)
     print("ДЕМОНСТРАЦИЯ TRY/EXCEPT/FINALLY")
     print("=" * 60)

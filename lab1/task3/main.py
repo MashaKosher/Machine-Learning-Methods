@@ -5,23 +5,23 @@ if __name__ == "__main__":
         print("\n" + "="*50)
         print("ГЛАВНОЕ МЕНЮ")
         print("="*50)
-        print("1. Поиск делителей числа")
-        print("2. Функция принимающая 1 аргумент")
-        print("3. Матрица")
-        print("4. Демонстрацию работы try/except/finally")
+        print("1. Класс Example")
+        print("2. Класс Employee")
+        print("3. Класс Zoo")
+        print("4. Кастосный класс BankAccount с методами экземпляра класса, статическими и класса")
         print("5. Выход")
         print("="*50)
         
         choice = input("Выберите задание (1-5): ").strip()
         
         if choice == "1":
-            find_divisors()
+            test_example()
         elif choice == "2":
-            test_function()
+            test_employee()
         elif choice == "3":
-            test_examples()
+            test_zoo()
         elif choice == "4":
-            demonstrate_try_except_finally()
+            test_bank()
         elif choice == "5":
             print("Выход из программы...")
             break
