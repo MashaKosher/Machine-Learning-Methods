@@ -38,7 +38,7 @@ def jewelry_shop():
             print("До свидания! Спасибо за посещение нашего магазина!")
             break
         else:
-            print("❌ Неверный выбор! Пожалуйста, введите число от 1 до 6")
+            print("Неверный выбор! Пожалуйста, введите число от 1 до 6")
 
 def view_descriptions(jewelry_dict):
     print("\n" + "-"*40)
@@ -99,7 +99,7 @@ def make_purchase(jewelry_dict, cart):
         try:
             parts = user_input.split()
             if len(parts) < 2:
-                print("❌ Ошибка! Введите название и количество через пробел")
+                print("Ошибка! Введите название и количество через пробел")
                 continue
             
             quantity = int(parts[-1])  
@@ -107,17 +107,17 @@ def make_purchase(jewelry_dict, cart):
             
             
             if product_name not in jewelry_dict:
-                print(f"❌ Товар '{product_name}' не найден!")
+                print(f"Товар '{product_name}' не найден!")
                 continue
             
             
             available_qty = jewelry_dict[product_name][2]
             if quantity <= 0:
-                print("❌ Количество должно быть положительным числом!")
+                print("Количество должно быть положительным числом!")
                 continue
             
             if quantity > available_qty:
-                print(f"❌ Недостаточно товара! Доступно: {available_qty} шт.")
+                print(f"Недостаточно товара! Доступно: {available_qty} шт.")
                 continue
             
             
@@ -130,13 +130,13 @@ def make_purchase(jewelry_dict, cart):
            
             cart.append((product_name, quantity, total_item_cost))
             
-            print(f"✅ Добавлено в корзину: {product_name} - {quantity} шт.")
-            print(f"💰 Стоимость: {total_item_cost} руб.")
+            print(f"Добавлено в корзину: {product_name} - {quantity} шт.")
+            print(f"Стоимость: {total_item_cost} руб.")
             
         except ValueError:
-            print("❌ Ошибка! Количество должно быть числом")
+            print("Ошибка! Количество должно быть числом")
         except Exception as e:
-            print(f"❌ Произошла ошибка: {e}")
+            print(f"Произошла ошибка: {e}")
     
    
     if cart:
