@@ -5,7 +5,7 @@ def fill_missing_values(dataFrame: pd.DataFrame) -> pd.DataFrame:
     Заполнение пропусков в данных без обработки выбросов
     """
     print("=" * 60)
-    print("🔧 ЗАПОЛНЕНИЕ ПРОПУСКОВ В ДАННЫХ")
+    print("ЗАПОЛНЕНИЕ ПРОПУСКОВ В ДАННЫХ")
     print("=" * 60)
     
     df = dataFrame.copy()
@@ -56,3 +56,41 @@ def fill_missing_values(dataFrame: pd.DataFrame) -> pd.DataFrame:
                 df[col] = df[col].fillna(fill_value)
 
     return df
+
+
+def fill_missing_value_mode(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Заполнение пропусков в данных.
+    """
+    print("=" * 60)
+    print("ЗАПОЛНЕНИЕ ПРОПУСКОВ В ДАННЫХ")
+    print("=" * 60)
+    
+    data = df.copy()
+    
+    missing_before = data.isnull().sum()
+    missing_cols = missing_before[missing_before > 0]
+    
+    if missing_cols.empty:
+        print("Пропусков не обнаружено")
+        return data
+    
+    print("\nПропуски до заполнения:")
+    for col, count in missing_cols.items():
+        print(f"   {col}: {count} ({count/len(data)*100:.1f}%)")
+    
+    # Заполнение
+    for col in missing_cols.index:
+        # if data[col].dtype == 'object':  
+            # категориальные → mode
+        fill_value = data[col].mode()[0]
+        strategy = 'mode'
+        # else:
+        #     # числовые → median
+        #     fill_value = data[col].median()
+        #     strategy = 'median'
+        
+        data[col] = data[col].fillna(fill_value)
+        print(f"   {col} → заполнено методом {strategy}, значение {fill_value}")
+    
+    return data
