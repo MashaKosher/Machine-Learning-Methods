@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from .helpers import get_numeric_columns
 
 def remove_outliers(dataFrame: pd.DataFrame, method: str = 'capping'):
@@ -70,12 +68,12 @@ def remove_outliers(dataFrame: pd.DataFrame, method: str = 'capping'):
                 print(f"   Фактический диапазон: [{df[col].min():.2f}, {df[col].max():.2f}]")
     
     if not outliers_info:
-        print("✅ Выбросы не обнаружены")
+        print("Выбросы не обнаружены")
         return df
     
     
     # 4. ПРИМЕНЕНИЕ ВЫБРАННОГО МЕТОДА
-    print(f"\n🔄 ПРИМЕНЕНИЕ МЕТОДА: {method.upper()}")
+    print(f"\nПРИМЕНЕНИЕ МЕТОДА: {method.upper()}")
     print("-" * 40)
     
     df_cleaned = df.copy()
@@ -97,7 +95,7 @@ def remove_outliers(dataFrame: pd.DataFrame, method: str = 'capping'):
                 'new_range': [df_cleaned[col].min(), df_cleaned[col].max()]
             }
             
-            print(f"✅ {col}: ограничено {removed_count} выбросов")
+            print(f"{col}: ограничено {removed_count} выбросов")
             print(f"   Новый диапазон: [{df_cleaned[col].min():.2f}, {df_cleaned[col].max():.2f}]")
             
         elif method == 'winsorize':
@@ -119,7 +117,7 @@ def remove_outliers(dataFrame: pd.DataFrame, method: str = 'capping'):
                 'percentiles': [lower_percentile, upper_percentile]
             }
             
-            print(f"✅ {col}: winsorized {removed_count} выбросов")
+            print(f"{col}: winsorized {removed_count} выбросов")
             print(f"   Перцентили [1%, 99%]: [{lower_percentile:.2f}, {upper_percentile:.2f}]")
             
         elif method == 'remove':
@@ -134,7 +132,7 @@ def remove_outliers(dataFrame: pd.DataFrame, method: str = 'capping'):
                 'remaining_rows': len(df_cleaned)
             }
             
-            print(f"✅ {col}: удалено {removed_count} строк с выбросами")
+            print(f"{col}: удалено {removed_count} строк с выбросами")
             print(f"   Осталось строк: {len(df_cleaned)}")
             
         elif method == 'log':
@@ -156,10 +154,10 @@ def remove_outliers(dataFrame: pd.DataFrame, method: str = 'capping'):
                     'transformed': True
                 }
                 
-                print(f"✅ {col}: применено логарифмическое преобразование")
+                print(f"{col}: применено логарифмическое преобразование")
                 print(f"   Выбросов до: {info['before']}, после: {outliers_new}")
             else:
-                print(f"⚠️  {col}: нельзя применить log к неположительным значениям")
+                print(f"{col}: нельзя применить log к неположительным значениям")
                 removal_results[col] = {'method': 'skip', 'reason': 'Неположительные значения'}
 
     return df_cleaned

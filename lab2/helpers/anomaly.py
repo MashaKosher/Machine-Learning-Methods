@@ -1,8 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
-from .empty import analyze_misses
 
 def anomaly_find(dataFrame: pd.DataFrame):
     # Выберем числовые колонки для анализа
