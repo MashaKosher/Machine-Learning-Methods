@@ -38,10 +38,19 @@ class Bird(Animal):
         return f"Птица: {self.breed}, Цена: {self.price:.2f} руб."
 
 
-class PetShop:    
-    def __init__(self, name: str):
+class PetShop:
+    # Атрибуты класса
+    total_shops = 0
+    default_discount = 0.1
+    shop_types = ["Обычный", "Премиум", "Эксклюзив"]
+    
+    def __init__(self, name: str, shop_type: str = "Обычный"):
         self.name = name
+        self.shop_type = shop_type
         self.animals: List[Animal] = []
+        self.founded_year = 2024
+        self.total_sales = 0.0
+        PetShop.total_shops += 1
     
     def add_animal(self, animal: Animal) -> None:
         self.animals.append(animal)
@@ -116,7 +125,123 @@ class PetShop:
             
         except Exception as e:
             print(f"Ошибка при сохранении в файл: {e}")
-  
+    
+    # ==================== МЕТОДЫ ЭКЗЕМПЛЯРА КЛАССА ====================
+    
+    def sell_animal(self, animal: Animal) -> str:
+        """Продать животное (удалить из списка и добавить к продажам)"""
+        if animal in self.animals:
+            self.animals.remove(animal)
+            self.total_sales += animal.price
+            return f"Животное {animal.breed} продано за {animal.price:.2f} руб."
+        return "Животное не найдено в магазине"
+    
+    def apply_discount(self, animal: Animal, discount_percent: float) -> float:
+        """Применить скидку к цене животного"""
+        if animal in self.animals:
+            discount_amount = animal.price * (discount_percent / 100)
+            animal.price -= discount_amount
+            return animal.price
+        raise ValueError("Животное не найдено в магазине")
+    
+    def get_animals_by_price_range(self, min_price: float, max_price: float) -> List[Animal]:
+        """Получить животных в определенном ценовом диапазоне"""
+        return [animal for animal in self.animals 
+                if min_price <= animal.price <= max_price]
+    
+    def get_total_inventory_value(self) -> float:
+        """Получить общую стоимость всех животных в магазине"""
+        return sum(animal.price for animal in self.animals)
+    
+    def get_shop_info(self) -> str:
+        """Получить полную информацию о магазине"""
+        return (f"Магазин: {self.name}\n"
+                f"Тип: {self.shop_type}\n"
+                f"Год основания: {self.founded_year}\n"
+                f"Количество животных: {len(self.animals)}\n"
+                f"Общая стоимость товара: {self.get_total_inventory_value():.2f} руб.\n"
+                f"Общие продажи: {self.total_sales:.2f} руб.")
+    
+    # ==================== МЕТОДЫ КЛАССА ====================
+    
+    @classmethod
+    def get_total_shops(cls) -> int:
+        """Получить общее количество созданных магазинов"""
+        return cls.total_shops
+    
+    @classmethod
+    def create_premium_shop(cls, name: str) -> 'PetShop':
+        """Создать премиум магазин с предустановленными животными"""
+        shop = cls(name, "Премиум")
+        # Добавляем премиальных животных
+        shop.add_animal(Fish("Араван", 15000.0))
+        shop.add_animal(Bird("Какаду", 25000.0))
+        return shop
+    
+    @classmethod
+    def create_budget_shop(cls, name: str) -> 'PetShop':
+        """Создать бюджетный магазин с недорогими животными"""
+        shop = cls(name, "Обычный")
+        # Добавляем бюджетных животных
+        shop.add_animal(Fish("Гуппи", 200.0))
+        shop.add_animal(Bird("Волнистый попугай", 800.0))
+        return shop
+    
+    @classmethod
+    def set_default_discount(cls, discount: float) -> None:
+        """Установить скидку по умолчанию для всех магазинов"""
+        cls.default_discount = discount
+    
+    @classmethod
+    def get_shop_types(cls) -> List[str]:
+        """Получить список доступных типов магазинов"""
+        return cls.shop_types.copy()
+    
+    # ==================== СТАТИЧЕСКИЕ МЕТОДЫ ====================
+    
+    @staticmethod
+    def validate_price(price: float) -> bool:
+        """Проверить корректность цены"""
+        return isinstance(price, (int, float)) and price > 0
+    
+    @staticmethod
+    def calculate_tax(price: float, tax_rate: float = 0.18) -> float:
+        """Рассчитать налог с продажи"""
+        return price * tax_rate
+    
+    @staticmethod
+    def format_price(price: float) -> str:
+        """Отформатировать цену для отображения"""
+        return f"{price:,.2f} руб."
+    
+    @staticmethod
+    def calculate_discount_price(original_price: float, discount_percent: float) -> float:
+        """Рассчитать цену со скидкой"""
+        if not (0 <= discount_percent <= 100):
+            raise ValueError("Скидка должна быть от 0 до 100%")
+        return original_price * (1 - discount_percent / 100)
+    
+    @staticmethod
+    def compare_animals_by_price(animal1: Animal, animal2: Animal) -> str:
+        """Сравнить двух животных по цене"""
+        if animal1.price > animal2.price:
+            return f"{animal1.breed} дороже {animal2.breed} на {animal1.price - animal2.price:.2f} руб."
+        elif animal1.price < animal2.price:
+            return f"{animal2.breed} дороже {animal1.breed} на {animal2.price - animal1.price:.2f} руб."
+        else:
+            return f"{animal1.breed} и {animal2.breed} имеют одинаковую цену"
+    
+    @staticmethod
+    def get_animal_category_by_price(price: float) -> str:
+        """Определить категорию животного по цене"""
+        if price < 1000:
+            return "Бюджетное"
+        elif price < 5000:
+            return "Среднее"
+        elif price < 10000:
+            return "Дорогое"
+        else:
+            return "Премиум"
 
 
 def create_sample_petshop() -> PetShop:
