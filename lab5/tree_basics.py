@@ -81,6 +81,10 @@ def gain(left_labels, right_labels, root_gini):
     # Количество элементов в каждой ветви
     n_left = len(left_labels)
     n_right = len(right_labels)
+
+    if n_left == 0 or n_right == 0:
+        return 0.0
+
     n_total = n_left + n_right
 
     # Критерий Джини для каждой ветви
