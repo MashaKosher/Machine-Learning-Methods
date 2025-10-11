@@ -5,8 +5,8 @@ from collections import Counter
 # 1) Класс узла дерева (по заготовке)
 class Node:
     def __init__(self, index, t, true_branch, false_branch):
-        self.index = index  # индекс признака, по которому ведется сравнение с порогом в этом узле
-        self.t = t  # значение порога
+        self.index = index  # индекс признака (номер колонки), по которому велось сравнение на этом шаге
+        self.t = t  # значение порога колонки с котрым сравнивались данные на этом шаге
         self.true_branch = true_branch  # поддерево, удовлетворяющее условию в узле
         self.false_branch = false_branch  # поддерево, не удовлетворяющее условию в узле
 
@@ -41,9 +41,9 @@ def gini(labels):
     Возвращает:
     impurity - значение критерия Джини (от 0 до 1)
     """
-    if not labels:
-        return 0
-    
+    if len(labels) == 0:
+        return 0.0
+
     total = len(labels)
     counts = Counter(labels)
     return 1 - sum((count / total) ** 2 for count in counts.values())
@@ -117,12 +117,15 @@ def split(data, labels, column_index, t):
     true_labels - метки для левой ветви
     false_labels - метки для правой ветви
     """
+    # идем по признаку и выбиарем индексы строк которые подходят под условие T
     left = np.where(data[:, column_index] <= t)
     right = np.where(data[:, column_index] > t)
 
+    # разделяем все данные по полученным индексам на 2 части
     true_data = data[left]
     false_data = data[right]
 
+    # разделяем все классы по полученным индексам на 2 части
     true_labels = labels[left]
     false_labels = labels[right]
 
@@ -148,15 +151,20 @@ def find_best_split(data, labels):
 
     root_gini = gini(labels)
 
-    best_gain = 0
-    best_t = None
-    best_index = None
+    best_gain = 0 # оптимальный прирост информации
+    best_t = None # оптимальное пороговое значение
+    best_index = None # индекс оптимального признака (data)
 
+    # кол-во признаков в датасете
     n_features = data.shape[1]
 
+    # идем по всем признакам
     for index in range(n_features):
+        # получаем уникальные значения признака
         t_values = np.unique(data[:, index])
 
+        # идем по всем уникальным значениям признака и с помощью них разбиваем data 
+        # и labeles на две по этому признаку >, <=
         for t in t_values:
             true_data, false_data, true_labels, false_labels = split(data, labels, index, t)
 
@@ -164,6 +172,7 @@ def find_best_split(data, labels):
             if len(true_labels) < min_samples_leaf or len(false_labels) < min_samples_leaf:
                 continue
 
+            # рассчитываем прирост информации
             current_gain = gain(true_labels, false_labels, root_gini)
 
             if current_gain > best_gain:
@@ -293,7 +302,7 @@ def accuracy_metric(actual, predicted):
     accuracy - доля правильных предсказаний (от 0 до 1)
     """
     # Проверка на пустые списки
-    if len(actual) == 0:
+    if len(actual) == 0 or len(predicted) == 0:
         return 0.0
 
     correct = 0
@@ -320,7 +329,7 @@ def evaluate_model(actual, predicted):
     metrics - словарь с метриками качества
     """
     # Проверка на пустые списки
-    if len(actual) == 0:
+    if len(actual) == 0 or len(predicted) == 0:
         return {
             'accuracy': 0.0,
             'precision': 0.0,
