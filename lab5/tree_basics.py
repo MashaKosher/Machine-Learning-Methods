@@ -1,4 +1,5 @@
 import numpy as np
+from collections import Counter
 
 # Базовые функции дерева решений
 # 1) Класс узла дерева (по заготовке)
@@ -40,22 +41,28 @@ def gini(labels):
     Возвращает:
     impurity - значение критерия Джини (от 0 до 1)
     """
-    # Подсчет количества объектов каждого класса
-    classes = {}
-    for label in labels:
-        if label not in classes:
-            classes[label] = 0
-        classes[label] += 1
-
-    # Расчет критерия Джини
-    impurity = 1
+    if not labels:
+        return 0
+    
     total = len(labels)
+    counts = Counter(labels)
+    return 1 - sum((count / total) ** 2 for count in counts.values())
+    # # Подсчет количества объектов каждого класса
+    # classes = {}
+    # for label in labels:
+    #     if label not in classes:
+    #         classes[label] = 0
+    #     classes[label] += 1
 
-    for label in classes:
-        p = classes[label] / total
-        impurity -= p ** 2
+    # # Расчет критерия Джини
+    # impurity = 1
+    # total = len(labels)
 
-    return impurity
+    # for label in classes:
+    #     p = classes[label] / total
+    #     impurity -= p ** 2
+
+    # return impurity
 
 
 # 4) Расчет прироста информации
